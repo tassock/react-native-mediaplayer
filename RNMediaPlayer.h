@@ -10,6 +10,6 @@
 #import <AVFoundation/AVFoundation.h>
 #import <AVKit/AVKit.h>
 
-@interface RNMediaPlayer : NSObject <RCTBridgeModule, AVPlayerViewControllerDelegate>
+@interface RNMediaPlayer : RCTEventEmitter <RCTBridgeModule, AVPlayerViewControllerDelegate>
 
 @end

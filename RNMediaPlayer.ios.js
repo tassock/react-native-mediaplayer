@@ -10,11 +10,11 @@ import {
 } from 'react-native';
 
 const RNMediaPlayer = NativeModules.RNMediaPlayer;
-const eventEmitter = new NativeEventEmitter(NativeRNMediaPlayer);
+const eventEmitter = new NativeEventEmitter(RNMediaPlayer);
 
 export default {
   open(options) {
-    return NativeRNMediaPlayer.open(options);
+    return RNMediaPlayer.open(options);
   },
 
   addEventListener(event, listener) {
