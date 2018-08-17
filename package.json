@@ -1,9 +1,9 @@
 {
-  "name": "react-native-mediaplayer",
+  "name": "react-native-mplayer",
   "version": "0.0.1",
   "repository": {
     "type": "git",
-    "url": "https://github.com/chriselly/react-native-mediaplayer.git"
+    "url": "https://github.com/chriselly/react-native-mplayer.git"
   },
   "license": "MIT",
   "keywords": ["react-native", "react-component", "ios", "mediaplayer", "media", "video", "audio"],
