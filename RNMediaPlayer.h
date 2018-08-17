@@ -7,6 +7,6 @@
 
 #import "RCTBridgeModule.h"
 
-@interface RNMediaPlayer : NSObject <RCTBridgeModule>
+@interface RNMediaPlayer : NSObject <RCTBridgeModule, AVPlayerViewControllerDelegate>
 
 @end

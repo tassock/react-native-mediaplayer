@@ -17,10 +17,31 @@
   AVPlayerViewController *_playerViewcontroller;
 
   NSString *_uri;
+  bool hasListeners;
 }
 
 
 RCT_EXPORT_MODULE();
+
+- (dispatch_queue_t)methodQueue
+{
+  return dispatch_get_main_queue();
+}
+
+- (void)startObserving
+{
+  hasListeners = YES;
+}
+
+- (void)stopObserving
+{
+  hasListeners = NO;
+}
+
+- (NSArray<NSString *> *)supportedEvents
+{
+ return @[@"MediaPlayerOnShow", @"MediaPlayerOnDismiss"];
+}
 
 RCT_EXPORT_METHOD(open:(NSDictionary *)options)
 {
@@ -41,6 +62,8 @@ RCT_EXPORT_METHOD(open:(NSDictionary *)options)
   dispatch_async(dispatch_get_main_queue(), ^{
 
     AVPlayerViewController *playerViewController = [[AVPlayerViewController alloc] init];
+    playerViewController.exitsFullScreenWhenPlaybackEnds = true;
+    playerViewController.delegate = self;
 
     playerViewController.player = [AVPlayer playerWithURL:fileURL];
 
@@ -56,7 +79,20 @@ RCT_EXPORT_METHOD(open:(NSDictionary *)options)
 
     [ctrl presentViewController:playerViewController animated:TRUE completion: nil];
 
+    if (hasListeners) {
+      [self sendEventWithName:@"MediaPlayerOnShow" body:nil];
+    }
+
   });
+}
+
+-(void)playerViewControllerDidEndDismissalTransition:(nonnull AVPlayerViewController *)controller
+{
+    _playerViewcontroller = nil;
+    NSLog(@"[RNMediaPlayer] AVPlayerViewController dismissed.");
+    if (hasListeners) {
+      [self sendEventWithName:@"MediaPlayerOnDismiss" body:nil];
+    }
 }
 
 @end

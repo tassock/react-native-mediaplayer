@@ -1,9 +1,40 @@
-/**
- * @providesModule RNMediaPlayer
- * @flow
- */
+// /**
+//  * @providesModule RNMediaPlayer
+//  * @flow
+//  */
+
 'use strict';
+import {
+  NativeModules,
+  NativeEventEmitter,
+} from 'react-native';
 
-var RNMediaPlayer = require('react-native').NativeModules.RNMediaPlayer;
+const RNMediaPlayer = NativeModules.RNMediaPlayer;
+const eventEmitter = new NativeEventEmitter(NativeRNMediaPlayer);
 
-module.exports = RNMediaPlayer;
+export default {
+  open(options) {
+    return NativeRNMediaPlayer.open(options);
+  },
+
+  addEventListener(event, listener) {
+    if (event === 'onShow') {
+      return eventEmitter.addListener('MediaPlayerOnShow', listener);
+    } else if (event === 'onDismiss') {
+      return eventEmitter.addListener('MediaPlayerOnDismiss', listener);
+    } else {
+      console.warn(`Trying to subscribe to unknown event: ${event}`);
+      return {
+        remove: () => {}
+      };
+    }
+  },
+
+  removeEventListener(event, listener) {
+    if (event === 'onShow') {
+      eventEmitter.removeListener('MediaPlayerOnShow', listener);
+    } else if (event === 'onDismiss') {
+      eventEmitter.removeListener('MediaPlayerOnDismiss', listener);
+    }
+  }
+};
