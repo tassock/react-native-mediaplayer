@@ -6,8 +6,9 @@
 //
 
 #import "RNMediaPlayer.h"
-#import "RCTLog.h"
-#import "RCTConvert.h"
+#import <React/RCTUtils.h>
+#import <React/RCTLog.h>
+#import <React/RCTConvert.h>
 #import <AVFoundation/AVFoundation.h>
 #import <AVKit/AVKit.h>
 
@@ -15,7 +16,7 @@
 {
   AVPlayer *_player;
   AVPlayerViewController *_playerViewcontroller;
-
+  
   NSString *_uri;
   bool hasListeners;
 }
@@ -40,7 +41,7 @@ RCT_EXPORT_MODULE();
 
 - (NSArray<NSString *> *)supportedEvents
 {
- return @[@"MediaPlayerOnShow", @"MediaPlayerOnDismiss"];
+  return @[@"MediaPlayerOnShow", @"MediaPlayerOnDismiss"];
 }
 
 RCT_EXPORT_METHOD(open:(NSDictionary *)options)
@@ -50,49 +51,49 @@ RCT_EXPORT_METHOD(open:(NSDictionary *)options)
   // uri: STRING (full resource name with file extension)
   //
   // missing: option to disable autoplay
-
+  
   _uri = [options objectForKey:@"uri"];
-
+  
   NSString* mediaFilePath = [[NSBundle mainBundle] pathForResource:_uri ofType:nil];
   NSAssert(mediaFilePath, @"Media not found: %@", _uri);
-
+  
   // refactor: implement an option to load network asset instead
   NSURL *fileURL = [NSURL fileURLWithPath:mediaFilePath];
-
+  
   dispatch_async(dispatch_get_main_queue(), ^{
-
+    
     AVPlayerViewController *playerViewController = [[AVPlayerViewController alloc] init];
     playerViewController.exitsFullScreenWhenPlaybackEnds = true;
     playerViewController.delegate = self;
-
+    
     playerViewController.player = [AVPlayer playerWithURL:fileURL];
-
+    
     // autoplay
     [playerViewController.player play];
-
+    
     _playerViewcontroller = playerViewController;
-
+    
     UIViewController *ctrl = [[[[UIApplication sharedApplication] delegate] window] rootViewController];
     UIView *view = [ctrl view];
-
+    
     view.window.windowLevel = UIWindowLevelStatusBar;
-
+    
     [ctrl presentViewController:playerViewController animated:TRUE completion: nil];
-
+    
     if (hasListeners) {
       [self sendEventWithName:@"MediaPlayerOnShow" body:nil];
     }
-
+    
   });
 }
 
 -(void)playerViewControllerDidEndDismissalTransition:(nonnull AVPlayerViewController *)controller
 {
-    _playerViewcontroller = nil;
-    NSLog(@"[RNMediaPlayer] AVPlayerViewController dismissed.");
-    if (hasListeners) {
-      [self sendEventWithName:@"MediaPlayerOnDismiss" body:nil];
-    }
+  _playerViewcontroller = nil;
+  NSLog(@"[RNMediaPlayer] AVPlayerViewController dismissed.");
+  if (hasListeners) {
+    [self sendEventWithName:@"MediaPlayerOnDismiss" body:nil];
+  }
 }
 
 @end

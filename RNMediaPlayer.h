@@ -5,7 +5,10 @@
 //  Created by Chris Elly on 2015.07.12
 //
 
-#import "RCTBridgeModule.h"
+#import <React/RCTBridgeModule.h>
+#import <React/RCTEventEmitter.h>
+#import <AVFoundation/AVFoundation.h>
+#import <AVKit/AVKit.h>
 
 @interface RNMediaPlayer : NSObject <RCTBridgeModule, AVPlayerViewControllerDelegate>
 
