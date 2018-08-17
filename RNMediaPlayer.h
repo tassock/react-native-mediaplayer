@@ -7,9 +7,7 @@
 
 #import <React/RCTBridgeModule.h>
 #import <React/RCTEventEmitter.h>
-#import <AVFoundation/AVFoundation.h>
-#import <AVKit/AVKit.h>
 
-@interface RNMediaPlayer : RCTEventEmitter <RCTBridgeModule, AVPlayerViewControllerDelegate>
+@interface RNMediaPlayer : RCTEventEmitter <RCTBridgeModule>
 
 @end
